@@ -1,6 +1,7 @@
 defmodule BabyRedis.Client do
   use GenServer
   require Logger
+  alias BabyRedis.Serializer
 
   @initial_state %{socket: nil}
 
@@ -24,7 +25,9 @@ defmodule BabyRedis.Client do
     {:reply, msg, state}
   end
 
+  @spec command(String.t()) :: String.t()
   def command(cmd) do
+    # {:ok, data} = Serializer.serialize(cmd)
     GenServer.call(__MODULE__, {:command, cmd})
   end
 end

@@ -6,7 +6,7 @@ defmodule BabyRedis.Application do
   def start(_type, _args) do
     children = [
       {Task.Supervisor, name: BabyRedis.TCPSupervisor},
-      Supervisor.child_spec({Task, fn -> BabyRedis.TCPConnection.accept(1234) end},
+      Supervisor.child_spec({Task, fn -> BabyRedis.Server.accept(1234) end},
         restart: :permanent
       ),
       {BabyRedis.Client, []}

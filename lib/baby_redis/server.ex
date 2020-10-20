@@ -1,4 +1,4 @@
-defmodule BabyRedis.TCPConnection do
+defmodule BabyRedis.Server do
   require Logger
   alias BabyRedis.Serializer
 
@@ -30,6 +30,8 @@ defmodule BabyRedis.TCPConnection do
         Logger.info("Received data: #{data}")
 
         # {:ok, cmd} = Serializer.deserialize(data)
+        # {:ok, result} Engine.execute(cmd)
+        # :ok = :gen_tcp.send(socket, result)
 
         :ok = :gen_tcp.send(socket, "Hey!\n")
         serve(socket)
