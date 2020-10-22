@@ -16,7 +16,8 @@ defmodule BabyRedis.Serializer do
   @doc """
     Deserializes data from redis protocol
   """
-  @spec deserialize(String.t()) :: {:ok | :error, String.t()}
-  def deserialize(data) do
+  @spec deserialize(String.t()) :: {:ok, String.t()} | {:error, atom()}
+  def deserialize(_data) do
+    {:error, :not_implemented}
   end
 end

@@ -13,7 +13,7 @@ defmodule BabyRedis.Server do
   defp loop_acceptor(socket) do
     {:ok, client} = :gen_tcp.accept(socket)
 
-    {:ok, pid} =
+      {:ok, pid} =
       Task.Supervisor.start_child(BabyRedis.TCPSupervisor, fn ->
         serve(client)
       end)
@@ -23,7 +23,7 @@ defmodule BabyRedis.Server do
   end
 
   defp serve(socket) do
-    Logger.info("Waiting to recieve data")
+    Logger.info("Waiting to receive data")
 
     case :gen_tcp.recv(socket, 0) do
       {:ok, data} ->

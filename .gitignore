@@ -24,3 +24,4 @@ baby_redis-*.tar
 
 .formatter.exs
 *.swp
+tags
