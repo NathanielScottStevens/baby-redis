@@ -22,6 +22,10 @@ defmodule BabyRedis.Serializer do
     {:ok, "*#{length}\r\n#{serialized_data}"}
   end
 
+  def serialize(nil) do
+    {:ok, "-1\r\n"}
+  end
+
   def serialize(_data), do: {:error, :unknown_type}
 
   @spec serialize!(String.t()) :: String.t()
@@ -33,7 +37,7 @@ defmodule BabyRedis.Serializer do
   @doc """
     Deserializes data from redis protocol
   """
-  @spec deserialize(String.t()) :: {:ok, String.t()} | {:error, atom()}
+  @spec deserialize(String.t()) :: {:ok, list()} | {:error, atom()}
   def deserialize("+" <> data) when is_binary(data) do
     {:ok, String.trim(data)}
   end
@@ -64,6 +68,10 @@ defmodule BabyRedis.Serializer do
     else
       {:error, :unmatched_items}
     end
+  end
+
+  def deserialize("-1\r\n") do
+    {:ok, nil}
   end
 
   def deserialize(_data), do: {:error, :not_a_valid_type}

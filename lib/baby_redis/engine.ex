@@ -20,11 +20,20 @@ defmodule BabyRedis.Engine do
     {:reply, result, %{state | data: new_data}}
   end
 
-  defp execute_cmd("set", [key | value], data), do: {nil, Map.put(data, key, value)}
+  defp execute_cmd("set", [key, value], data) do
+    Logger.info("Setting #{key} to #{value}")
+    {nil, Map.put(data, key, value)}
+  end
+
+  defp execute_cmd("get", [key], data) do
+    Logger.info("Getting value for #{key}")
+    {data[key], data}
+  end
+
   defp execute_cmd(_cmd, _values, data), do: {:unknown_command, data}
 
   @doc "Executes command for datastore engine"
-  @spec execute(command()) :: {:ok | :error, String.t()}
+  @spec execute(command()) :: nil | String.t() | integer()
   def execute(command) do
     GenServer.call(__MODULE__, {:execute, command})
   end

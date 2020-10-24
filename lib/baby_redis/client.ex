@@ -20,14 +20,15 @@ defmodule BabyRedis.Client do
     :ok = :gen_tcp.send(socket, cmd)
 
     {:ok, msg} = :gen_tcp.recv(socket, 0)
-    Logger.info("Client received message: #{msg}")
+    {:ok, msg_deserialized} = Serializer.deserialize(msg)
+    Logger.info("Client received message: #{inspect(msg_deserialized)}")
 
     {:reply, msg, state}
   end
 
   @spec command(String.t()) :: String.t()
   def command(cmd) do
-    # {:ok, data} = Serializer.serialize(cmd)
-    GenServer.call(__MODULE__, {:command, cmd})
+    {:ok, data} = Serializer.serialize(cmd)
+    GenServer.call(__MODULE__, {:command, data})
   end
 end

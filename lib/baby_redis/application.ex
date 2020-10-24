@@ -9,7 +9,8 @@ defmodule BabyRedis.Application do
       Supervisor.child_spec({Task, fn -> BabyRedis.Server.accept(1234) end},
         restart: :permanent
       ),
-      {BabyRedis.Client, []}
+      {BabyRedis.Client, []},
+      {BabyRedis.Engine, []}
     ]
 
     opts = [strategy: :one_for_one, name: BabyRedis.Supervisor]

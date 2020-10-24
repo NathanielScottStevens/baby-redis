@@ -1,6 +1,7 @@
 defmodule BabyRedis.Server do
   require Logger
   alias BabyRedis.Serializer
+  alias BabyRedis.Engine
 
   def accept(port) do
     opts = [:binary, packet: 0, active: false, reuseaddr: true]
@@ -13,7 +14,7 @@ defmodule BabyRedis.Server do
   defp loop_acceptor(socket) do
     {:ok, client} = :gen_tcp.accept(socket)
 
-      {:ok, pid} =
+    {:ok, pid} =
       Task.Supervisor.start_child(BabyRedis.TCPSupervisor, fn ->
         serve(client)
       end)
@@ -29,11 +30,11 @@ defmodule BabyRedis.Server do
       {:ok, data} ->
         Logger.info("Received data: #{data}")
 
-        # {:ok, cmd} = Serializer.deserialize(data)
-        # {:ok, result} Engine.execute(cmd)
-        # :ok = :gen_tcp.send(socket, result)
+        {:ok, cmd} = Serializer.deserialize(data)
+        result = cmd |> Engine.execute() |> Serializer.serialize!()
 
-        :ok = :gen_tcp.send(socket, "Hey!\n")
+        Logger.info("Sending result: #{inspect(result)}")
+        :ok = :gen_tcp.send(socket, result)
         serve(socket)
 
       {:error, err} ->

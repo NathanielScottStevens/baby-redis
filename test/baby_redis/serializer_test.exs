@@ -15,6 +15,10 @@ defmodule SerializerTest do
       assert {:ok, "*2\r\n+hello\r\n:555\r\n"} == Serializer.serialize(["hello", 555])
     end
 
+    test "nil" do
+      assert {:ok, "-1\r\n"} == Serializer.serialize(nil)
+    end
+
     test "unknown type returns error" do
       assert {:error, :unknown_type} == Serializer.serialize(:atom)
     end
@@ -31,6 +35,10 @@ defmodule SerializerTest do
 
     test "list" do
       assert {:ok, ["hello", 555]} == Serializer.deserialize("*2\r\n+hello\r\n:555\r\n")
+    end
+
+    test "nil" do
+      assert {:ok, nil} == Serializer.deserialize("-1\r\n")
     end
 
     test "returns error if list has too few items" do
